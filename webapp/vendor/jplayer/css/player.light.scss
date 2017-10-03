@@ -1,0 +1,297 @@
+$pathIMG: '../image/playerUI.light.png';
+$pathPLAY: '../image/preimg.light.png';
+
+.webPlayer.light {
+    display: inline-block;
+    position: relative;
+    font-family: 'Segoe UI', Verdana, sans-serif;
+    line-height: 1.4;
+    font-size: 13px;
+    box-shadow: 0 0 1px rgba(255,255,255,0.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,0.5);
+    text-align: center;
+
+    a.smooth {
+        transition: all 120ms ease-in-out;
+        -webkit-transition: all 120ms ease-in-out;
+        -moz-transition: all 120ms ease-in-out;
+        -o-transition: all 120ms ease-in-out;
+    }
+
+    * { 
+        -webkit-box-sizing: content-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: content-box;    /* Firefox, other Gecko */
+        box-sizing: content-box;         /* Opera/IE 8+ */
+    }
+
+    &.jp-video-full > .controls {
+        position: absolute;
+        left: 0;
+        right:0;
+        bottom: 0;
+        opacity: 0.8;
+        z-index: 1000;
+    }
+
+    /* Chrome FIX for full screen */
+    &.jp-video-full,
+    &.jp-video-full object,
+    &.jp-video-full video {
+        position: fixed;
+        top: 0;
+        left:0;
+        right:0;
+        bottom:0;
+        display:block;
+        z-index: 999;
+    }
+
+    &.jp-video-full > .playerScreen,
+    &.jp-video-full > .playerScreen > .video-play {
+        z-index: 1000;
+    }
+
+    .playerScreen {
+        cursor: pointer;
+
+        .video-play {
+            display: block;
+            position: absolute;
+            z-index: 990;
+            width: 100%;;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 50px;
+            background: url( $pathPLAY ) no-repeat center center;
+            opacity: 0.8;
+            background-color: rgba(255,255,255,0.1);
+        }
+    }
+
+    .controls {
+        display: block;
+        position: relative;
+        height: 40px;
+        background: #FAFAFA;
+        color: #646464;
+        padding: 5px 10px;
+        z-index: 996;
+        border: 1px solid rgb(230,230,230);
+
+        .leftblock {
+            position: absolute;
+            left: 3px;
+            width: 50px;
+
+            .play {
+                display: block;
+				margin: 0 auto;
+                width: 40px;
+                height: 40px;
+                background: url( $pathIMG ) no-repeat 0 1px;
+                opacity: 0.8;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+
+            .pause {
+                display: block;
+				margin: 0 auto;
+                width: 40px;
+                height: 40px;
+                background: url( $pathIMG ) no-repeat -40px 1px;
+                opacity: 0.8;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .play-progress {
+            position: relative;
+            display: block;
+            margin: 0 130px 0 50px;
+            text-align: left;
+
+            span {
+                font-size: 12px;
+                margin-left: 1px;
+                color: #282828;
+            }
+
+            .progressbar {
+                display: block;
+                height: 4px;
+                background-color: #3C3C3C;
+                background: rgba(0,0,0,0.1);
+                margin: 2.5px 0;
+
+                .seekBar {
+                    position: relative;
+                    display: block;
+                    cursor: pointer;
+                    padding: 1px;
+                    background: rgba(0,0,0,0.05);
+
+                    .playBar {
+                        display: block;
+                        height: 2px;
+                        padding: 0;
+                        background: #191919;
+                    }
+
+                    a {
+                        display: block;
+                        position: absolute;
+                        top: -2px;
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 5px;
+                        background: #191919;
+                        margin-left: -3px;
+
+                        div {
+                            width: 8px;
+                            height: 8px;
+                        }
+                    }
+                }
+            }
+
+            .time {
+                display: block;
+                position: absolute;
+                width: 50px;
+                font-size: 11px;
+
+                &.current {
+                    left: 1px;
+                    text-align: left;
+                    color: #282828;
+                }
+
+                &.duration {
+                    right: 0px;
+                    text-align: right;
+                }
+            }
+        }
+
+        .rightblock {
+            position: absolute;
+            right: 10px;
+            width: 110px;
+            top: 5px;
+
+            .volumeText {
+                display: block;
+                position: absolute;
+                bottom: -12px;
+                text-align: center;
+                width: 80px;
+                font-size: 11px;
+            }
+
+            .volumeBar {
+                display: block;
+                position: absolute;
+                height: 4px;
+                background-color: #EBEBEB;
+                background: rgba(0,0,0,0.1);
+                width: 80px;
+                top: 20px;
+                left: 0;
+                cursor: pointer;
+
+                .currentVolume {
+                    position: relative;
+                    height: 2px;
+                    padding: 1px;
+
+                    .curvol {
+                        display: block;
+                        height: 2px;
+                        padding: 0;
+                        background: #191919;
+                    }
+
+                    a {
+                        display: block;
+                        position: absolute;
+                        top: -2px;
+                        margin-left: -3px;
+                        width: 8px;
+                        height: 8px;
+                        border-radius: 5px;
+                        background: #191919;
+
+                        div {
+                            display: block;
+                            width: 8px;
+                            height: 8px;
+                        }
+                    }
+
+                }
+            }
+
+            .fullScreen {
+                display: none;
+                float: right;
+                width: 16px;
+                height: 16px;
+                background: url( $pathIMG ) no-repeat 0 -50px;
+                margin-top: 14px;
+                opacity: 0.4;
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+
+            .fullScreenOFF {
+                display: none;
+                float: right;
+                width: 16px;
+                height: 16px;
+                background: url( $pathIMG ) no-repeat 0 -68px;
+                margin-top: 14px;
+                opacity: 0.4;
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+        }
+
+
+    }
+
+    // Add support for AUDIO only
+    &.audioPlayer {
+
+        .progress {
+            margin-right: 100px;
+        }
+
+        .rightblock {
+            width: 85px;
+
+            .volumeText {
+                bottom: -42px;
+            }
+        }
+
+        .fullScreen {
+            display: none;
+        }
+
+        .fullScreenOFF {
+            display: none;
+        }
+    }
+}
