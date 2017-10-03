@@ -1,4 +1,4 @@
-Aloja IVR-AVP
+Aloha IVR-AVP
 ===================
 Inbound Voice Recording Automatic Verification Platform
 
