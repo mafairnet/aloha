@@ -19,7 +19,7 @@ This system needs 3 separate servers to work.
 2. Oreka OpenSource
 3. Aloha Server (with Dejavu (Audio Fingerprinting) Python Module)
 
-####System Architecture Diagram
+#### System Architecture Diagram
 ![Aloha System Architecture](http://maf.mx/astricon/2017/images/aloha_system_architecture.png)
 
 ### Oreka OpenSource Server
