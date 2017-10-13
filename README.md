@@ -2,6 +2,8 @@ Aloha IVR-AVP
 ===================
 Inbound Voice Recording Automatic Verification Platform
 
+![Aloha Dashboard](http://maf.mx/astricon/2017/images/aloha_interface.png)
+
 Prerequisites
 -----------
 - CentOS 6.7-x86_64-minimal ISO
@@ -13,9 +15,12 @@ Prerequisites
 Installation
 -----------
 This system needs 3 separate servers to work.
-1. PBX Server
+1. Free PBX
 2. Oreka OpenSource
 3. Aloha Server (with Dejavu (Audio Fingerprinting) Python Module)
+
+####System Architecture Diagram
+![Aloha System Architecture](http://maf.mx/astricon/2017/images/aloha_system_architecture.png)
 
 ### Oreka OpenSource Server
 Before you start you need two network interfaces on the Oreka Server. One will be to access the server and manage it. The other one will be the interface where we are going to receive all the VoIP traffic through a PortMirroring Configuration (AKA Promisc). Also the minimun requirements for the server are 2 cores in the processor and 2GB of RAM. 
