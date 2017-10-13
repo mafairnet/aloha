@@ -51,8 +51,8 @@ chmod +x orkweb-1.7-838-x64-os-linux-installer.sh
 ./orkaudio-1.7-844.x86_64-x-x86_64.centos6-installer.sh
 ```
 5. Complete orkaudio installation proccess. On the installation process you must consider:
-  1. Select the option i to continue installation process.
-  2. Indicate that license file willl be installed later with 'l'.
+   1. Select the option i to continue installation process.
+   2. Indicate that license file willl be installed later with 'l'.
 6. Install MySQL Server.
 ```
 yum install mysql-server -y
@@ -64,7 +64,7 @@ mysql_secure_installation
 ```
 create database oreka;
 ```
-8. Install OrkWeb Open Source with the next steps:
+8. Install OrkWeb Open Source with the installer:
 ```
 ./orkweb-1.7-838-x64-os-linux-installer.sh
 ```
@@ -77,32 +77,47 @@ nano /opt/tomcat7/webapps/orkweb/WEB-INF/web.xml
 <param-name>ConfigDirectory</param-name>
 <param-value>/opt/oreka/</param-value>
 ```
-11. Copy config files to /opt/oreka
+11. Edit OrkTrack web.xml
+```
+nano /opt/tomcat7/webapps/orktrack/WEB-INF/web.xml
+```
+12. Edit the ConfigDirectory param-value set "/opt/oreka/"
+```
+<param-name>ConfigDirectory</param-name>
+<param-value>/opt/orkweb/</param-value>
+```
+13. Copy config files to /opt/oreka
 ```
 mkdir /opt/oreka
 cd /opt/aloha/oreka/opt/
 cp * /opt/oreka/
 ```
-12. Reconfigure iptables for access the OrekWeb Server
+14. Modifify the /opt/oreka/database.hbm.xml file and add your DB credentials.
+```
+<property name="hibernate.connection.url">jdbc:mysql://localhost/oreka</property>
+<property name="hibernate.connection.password">PASSWORD</property>
+<property name="hibernate.connection.username">USER</property>
+```
+15. Reconfigure iptables for access the OrekWeb Server
 ```
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT -m comment --comment "Tomcat Server port"
 service iptables save
 service iptables restart
 iptables -F
 ```
-13. Edit the configuration of the OrkAudio file "/etc/orkaudio/config.xml" and set de values of the next configurations.
+16. Edit the configuration of the OrkAudio file "/etc/orkaudio/config.xml" and set de values of the next configurations.
 ```
 <AudioOutputPath>/opt/tomcat7/webapps/ROOT</AudioOutputPath>
 <StorageAudioFormat>pcmwav</StorageAudioFormat>
 <!--In this case the network interface receiving all tha through port mirroring is eth1-->
 <Devices>eth1</Devices>
 ```
-14. Configure OrkAudio start at boot and start OrkAudio Service
+17. Configure OrkAudio start at boot and start OrkAudio Service
 ```
 chkconfig orkaudio on
 service orkaudio start
 ```
-15. Go to OrkWeb at http://SERVERIP:8080/orkweb/ and test calls are being recorded.
+18. Go to OrkWeb at http://SERVERIP:8080/orkweb/ and test calls are being recorded.
 
 ### PBX Server
 **Steps to be added...
