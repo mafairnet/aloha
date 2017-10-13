@@ -97,7 +97,7 @@ iptables -F
 chkconfig orkaudio on
 service orkaudio start
 ```
-15. Go to OrkWeb at http://172.20.16.111:8080/orkweb/ and test calls are being recorded.
+15. Go to OrkWeb at http://SERVERIP:8080/orkweb/ and test calls are being recorded.
 
 ### PBX Server
 **Steps to be added...
