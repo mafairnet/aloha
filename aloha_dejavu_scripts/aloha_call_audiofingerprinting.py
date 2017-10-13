@@ -20,8 +20,7 @@ with open("/opt/dejavu/dejavu.cnf") as f:
 djv = Dejavu(config)
 
 #Aloha recorder server definitions
-#fileServer = "http://dev007.pricetravel.com.mx:8080/"
-fileServer = "http://172.21.0.246:8080/"
+fileServer = "http://OREKASERVERIP:8080/"
 
 #Aloha temporal files folder
 tempFolder = "/opt/aloha/temp/"
@@ -52,7 +51,7 @@ def delete_temp_files(folder):
 
 #Get data from the call recordings
 def obtainPendingCalls():
-    db = MySQLdb.connect("172.21.0.245","root","","aloha" )
+    db = MySQLdb.connect("ALOHASERVERIP","DBUSER","PASSWORD","aloha" )
     try:
         cursor = db.cursor()
         cursor.execute(sqlAlohaProccessing)
@@ -64,7 +63,7 @@ def obtainPendingCalls():
 
 #Update data from call recordings with AudioFingerPrinting results
 def updateCallsData(callRecordingId,callData):
-    db = MySQLdb.connect("172.21.0.245","root","","aloha" )
+    db = MySQLdb.connect("ALOHASERVERIP","DBUSER","PASSWORD","aloha" )
     try:
         cursor = db.cursor()
 	tape = str(callRecordingId)
@@ -93,7 +92,7 @@ def updateCallsData(callRecordingId,callData):
     db.close()
 
 def getCallRecording(id):
-    db = MySQLdb.connect("172.21.0.246","aloha_user","CI.2016","oreka" )
+    db = MySQLdb.connect("OREKASERVERIP","DBUSER","PASSWORD","oreka" )
     try:
         cursor = db.cursor()
         cursor.execute(sqlAlohaRecorder.substitute(id=str(id)))
@@ -119,8 +118,8 @@ def checkAudioFingerprintig(callRecordingData):
     return audio
 
 def sendAlert(text):
-    alertUrl = "http://dev078.pricetravel.com.mx:88/ucom/index.php?media=tlg&type=72763807&tittle=ALOHA%20Notification&body=" + text 
-    urllib2.urlopen(alertUrl).read()
+    #alertUrl = "YOURSERVERNOTIFICATIONURL" + text 
+    #urllib2.urlopen(alertUrl).read()
 
 #Obtain pending calls
 pendingCalls = obtainPendingCalls()

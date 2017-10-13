@@ -34,13 +34,11 @@ with open("/opt/dejavu/dejavu.cnf") as f:
 
 djv = Dejavu(config)
 
-#fileServer = "http://dev007.pricetravel.com.mx:8080/"
-fileServer = "http://172.21.0.246:8080/"
+fileServer = "http://OREKASERVERIP:8080/"
 tempFolder = "/opt/aloha/temp/"
 
 # Open database connection
-#db = MySQLdb.connect("dev007.pricetravel.com.mx","aloha_user","CTI.2016","oreka" )
-db = MySQLdb.connect("172.21.0.246","aloha_user","CI.2016","oreka" )
+db = MySQLdb.connect("OREKASERVERIP","DBUSER","PASSWORD","oreka" )
 
 # prepare a cursor object using cursor() method
 cursor = db.cursor()

@@ -6,8 +6,9 @@ Inbound Voice Recording Automatic Verification Platform
 
 Prerequisites
 -----------
-- CentOS 6.7-x86_64-minimal ISO
-- Dejavu (Python AudioFingerPrinting library)
+- CentOS 6.7-x86_64-minimal ISO (Oreka)
+- CentOS 7-x86_64-minimal ISO (Aloha/Dejavu)
+- Dejavu (Python AudioFingerPrinting Library)
 - Oreka OpenSource
 - Python 2.6
 - MySQL Server (5.1 or later)
@@ -84,7 +85,7 @@ nano /opt/tomcat7/webapps/orktrack/WEB-INF/web.xml
 12. Edit the ConfigDirectory param-value set "/opt/oreka/"
 ```
 <param-name>ConfigDirectory</param-name>
-<param-value>/opt/orkweb/</param-value>
+<param-value>/opt/oreka/</param-value>
 ```
 13. Copy config files to /opt/oreka
 ```
@@ -98,7 +99,7 @@ cp * /opt/oreka/
 <property name="hibernate.connection.password">PASSWORD</property>
 <property name="hibernate.connection.username">USER</property>
 ```
-15. Reconfigure iptables for access the OrekWeb Server
+15. Reconfigure iptables for access the OrkWeb Server
 ```
 iptables -A INPUT -m state --state NEW -m tcp -p tcp --dport 8080 -j ACCEPT -m comment --comment "Tomcat Server port"
 service iptables save
@@ -119,9 +120,114 @@ service orkaudio start
 ```
 18. Go to OrkWeb at http://SERVERIP:8080/orkweb/ and test calls are being recorded.
 ### Aloha Server
-**Steps to be added...
+1. Install CentOS 7 Minimal on a physical server or virtual server.
+2. Disable SELinux (SELINUX=disabled)
+```
+yum install nano -y
+nano /etc/sysconfig/selinux
+reboot
+```
+3. Install Setup Tools and configure network devices to start at boot.
+```
+yum -y update
+nmtui
+```
+4. Install HTTPD, PHP and MySQL.
+```
+yum install httpd mariadb-server php php-mysql -y
+systemctl enable httpd.service
+systemctl enable mariadb.service
+systemctl start mariadb.service
+systemctl start httpd.service
+mysql_secure_installation
+```
+5. Install the dejavu audiofingerprinting library and dependencies
+```
+yum install epel-release -y
+yum groupinstall -y "development tools"
+yum install gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel portaudio-devel zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel expat-devel numpy scipy python-matplotlib ffmpeg portaudio-devel python-pip wget -y
+pip install --upgrade pip
+pip install PyAudio
+pip install pydub
+pip install PyDejavu
+```
+6. Clone the repository to your custom PBX and copy the aloha scripts and webapp.
+```
+yum install -y git
+cd /opt
+git clone https://github.com/mafairnet/aloha.git
+cd /opt/aloha/webapp/
+yes | cp -rf * /var/www/html/
+cd /opt/aloha/aloha_dejavu_scripts/
+mkdir /opt/dejavu/
+cp /opt/aloha/aloha_dejavu_scripts/dejavu.cnf /opt/dejavu/
+mkdir /opt/aloha/bin/
+cp * /opt/aloha/bin/
+cd /opt/aloha/bin/
+chmod +x aloha_worker.py
+chmod +x aloha_dejavu_fingerprinting.py
+chmod +x aloha_call_audiofingerprinting.py
+```
+7. Login to MySQL and create the aloha database and dejavu db.
+```
+CREATE DATABASE IF NOT EXISTS dejavu;
+CREATE DATABASE IF NOT EXISTS aloha;
+```
+8. Run the DB installation script.
+```
+mysql -u db_user -p aloha < /opt/aloha/database/aloha-db-install.sql
+```
+9. Edit the Dejavu configuration file "/opt/dejavu/dejavu.cnf" to set your DB Credentials:
+```
+{
+    "database": {
+        "host": "127.0.0.1",
+        "user": "user",
+        "passwd": "password", 
+        "db": "dejavu"
+    }
+}
+```
+10. Edit the Aloha Call Generator Script "aloha_worker.py" to set your DB Credentials:
+```
+fileServer = "http://OREKASERVERIP:8080/"
+db = MySQLdb.connect("OREKASERVERIP","DBUSER","PASSWORD","oreka" )
+```
+11. Edit the Aloha Frequency Check Script "aloha_call_audiofingerprinting.py" to set your DB Credentials:
+```
+fileServer = "http://OREKASERVERIP:8080/"
+db = MySQLdb.connect("ALOHASERVERIP","DBUSER","PASSWORD","aloha" )
+db = MySQLdb.connect("OREKASERVERIP","DBUSER","PASSWORD","oreka" )
+```
+12. Edit the DB config file for te Aloha WebApp
+```
+$GLOBALS['aloha_db_server']   = '0.0.0.0';
+$GLOBALS['aloha_db_username'] = 'db_user';
+$GLOBALS['aloha_db_password'] = 'db_pass';
+$GLOBALS['aloha_db_name']    = 'aloha';
+
+$GLOBALS['dejavu_db_server']   = '0.0.0.0';
+$GLOBALS['dejavu_db_username'] = 'db_user';
+$GLOBALS['dejavu_db_password'] = 'db_pass';
+$GLOBALS['dejavu_db_name']    = 'dejavu';
+
+$GLOBALS['aloha_recorder_db_server']   = '0.0.0.0';
+$GLOBALS['aloha_recorder_db_username'] = 'db_user';
+$GLOBALS['aloha_recorder_db_password'] = 'db_pass';
+$GLOBALS['aloha_recorder_db_name']    = 'oreka';
+```
+12. Add your scripts to the crontab table with "crontab -e" and add the following lines:
+```
+* * * * * /opt/aloha/bin/aloha_worker.py
+* * * * * /opt/aloha/bin/aloha_dejavu_fingerprinting.py
+* * * * * /opt/aloha/bin/aloha_call_audiofingerprinting.py
+```
+13. Allow HTTP access to the servers
+```
+firewall-cmd --zone=public --add-port=80/tcp
+```
+14. Go to the Aloha Dashboard and check that the platform show data on the catalogs like "Status" at http//ALOHASERVERIP/ the default user is "admin" and the password is "pass".
 ### PBX Server
-**Steps to be added...
 1. Install on other server AsteriskNow Distro with FreePBX13. You can download it from http://downloads.asterisk.org/pub/telephony/asterisk-now/AsteriskNow-1013-current-64.iso
 2. Edit the /etc/asterisk/extensions_custom.conf file and add the next lines:
 ```

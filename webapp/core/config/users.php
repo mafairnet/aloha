@@ -1,6 +1,6 @@
 <?php
 	// Database details
 	$allowedUsers = array(
-                        array('admin','d34b6c59ef0497d8ff246abd1049352e',1),
+                        array('admin','1a1dc91c907325c69271ddf0c944bc72',1),
 					);
 ?>
