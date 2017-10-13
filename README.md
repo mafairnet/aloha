@@ -92,7 +92,7 @@ mkdir /opt/oreka
 cd /opt/aloha/oreka/opt/
 cp * /opt/oreka/
 ```
-14. Modifify the /opt/oreka/database.hbm.xml file and add your DB credentials.
+14. Modify the /opt/oreka/database.hbm.xml file and add your DB credentials.
 ```
 <property name="hibernate.connection.url">jdbc:mysql://localhost/oreka</property>
 <property name="hibernate.connection.password">PASSWORD</property>
@@ -118,9 +118,75 @@ chkconfig orkaudio on
 service orkaudio start
 ```
 18. Go to OrkWeb at http://SERVERIP:8080/orkweb/ and test calls are being recorded.
-
-### PBX Server
-**Steps to be added...
-
 ### Aloha Server
 **Steps to be added...
+### PBX Server
+**Steps to be added...
+1. Install on other server AsteriskNow Distro with FreePBX13. You can download it from http://downloads.asterisk.org/pub/telephony/asterisk-now/AsteriskNow-1013-current-64.iso
+2. Edit the /etc/asterisk/extensions_custom.conf file and add the next lines:
+```
+[wait-ivr]
+exten => wait,1,Answer()
+exten => wait,n,Wait(300)
+exten => wait,n,Hangup()
+
+[macro-aloha]
+exten => s,1,NoOp(to-customer)
+exten => s,n,Set(CALLERID(num)=9999)
+exten => s,n,Set(CALLERID(name)=Aloha)
+exten => s,n,Set(TIMEOUT(absolute)=30)
+exten => s,n,Answer()
+exten => s,n,Playback(/var/lib/asterisk/sounds/en/mrwhite)
+```
+3. Create a SIP trunk between your PBX and another PBX (This other PBX wil handle the outbound calls). The SIP Settings will be:
+```
+disallow=all
+allow=alaw&ulaw&gsm
+username=myuser-sip
+type=friend
+secret=PASSWORD
+host=OUTBOUNDPBXIP
+context=from-internal
+trunk=yes
+requirecalltoken=no
+qualify=yes
+```
+5. Create the SIP Trunk also at your Outbound PBX to the Custom PBX.
+```
+disallow=all
+allow=alaw&ulaw&gsm
+username=myuser-sip
+type=friend
+secret=PASSWORD
+host=CUSTOMPBXIP
+context=from-internal
+trunk=yes
+requirecalltoken=no
+qualify=yes
+```
+4. Clone the repository to your custom PBX and copy the aloha scripts
+```
+yum install -y git
+cd /opt
+git clone https://github.com/mafairnet/aloha.git
+cd /opt/aloha/pbx_scripts/
+mkdir /opt/aloha/bin/
+cp * /opt/aloha/bin/
+cd /opt/aloha/bin/
+chmod +x aloha_call_generator.py
+chmod +x aloha_frecuency_check.py
+```
+5. Edit the Aloha Call Generator Script "aloha_call_generator.py" to set your DB Credentials:
+```
+db = MySQLdb.connect("ALOHASERVERIP","aloha_user","PASSWORD","aloha" )
+```
+6. Edit the Aloha Frequency Check Script "aloha_frecuency_check.py" to set your DB Credentials:
+```
+db = MySQLdb.connect("ALOHASERVERIP","aloha_user","PASSWORD","aloha" )
+```
+7. Add your scripts to the crontab table with "crontab -e" and add the following lines:
+```
+* * * * * /opt/aloha/bin/aloha_call_generator.py
+* * * * * /opt/aloha/bin/aloha_frecuency_check.py
+```
+

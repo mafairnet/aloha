@@ -19,7 +19,7 @@ HOURLY		= 5
 MINUTELY	= 6
 NONE		= 7
 
-db = MySQLdb.connect("172.21.0.245","aloha_user","CTI.2016","aloha" )
+db = MySQLdb.connect("ALOHASERVERIP","aloha_user","PASSWORD","aloha" )
 
 cursor = db.cursor()
 
