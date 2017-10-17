@@ -18,7 +18,8 @@ When you program a test you can add one or more numbers to check. The platform w
 
 The method to compare the recording and the IVR audios database is called Audio Fingerprinting (We use the Dejavu Audio Fingerprinting Python Library). The audios area compared and if the confidence (number of point matching between audio fingerprintings) is bigger you have a perfect match between audios.
 
-More info about this project and how to deal with TelCo at http://www.maf.mx/astricon/2017/ also you can watch the next video (https://www.youtube.com/watch?v=M9Nkh4mp2fI&t=1052s) where Chris from Crosstalk solutions talks about the Aloha project (minute 7:00).
+More info about this project and how to deal with TelCo at http://www.maf.mx/astricon/2017/.
+Also you can watch the next video (https://www.youtube.com/watch?v=M9Nkh4mp2fI&t=1052s) where Chris from Crosstalk solutions talks about the Aloha project (minute 7:00).
 
 Prerequisites
 -----------
