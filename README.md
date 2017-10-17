@@ -6,7 +6,8 @@ Inbound Voice Recording Automatic Verification Platform
 
 About
 -----------
-####Objective: Validate TelCo Services
+#### Objective: Validate TelCo Services
+
 Sometimes the telephony companies make mistakes when they are routing your calls to your Asterisk PBX. Sometimes calls are routed to another number or you have Toll-Free number not routing as they supposed to be routed.
 
 The Aloha platform helps you to check automatically that configuration hourly, daily, weekly, monthly or yearly and it's very simple to use.
