@@ -4,6 +4,21 @@ Inbound Voice Recording Automatic Verification Platform
 
 ![Aloha Dashboard](http://maf.mx/astricon/2017/images/aloha_interface.png)
 
+About
+-----------
+####Objective: Validate TelCo Services
+Sometimes the telephony companies make mistakes when they are routing your calls to your Asterisk PBX. Sometimes calls are routed to another number or you have Toll-Free number not routing as they supposed to be routed.
+
+The Aloha platform helps you to check automatically that configuration hourly, daily, weekly, monthly or yearly and it's very simple to use.
+
+When you program a test you can add one or more numbers to check. The platform will dial the numbers and create a recording of the call. This recording will be compared to your existing IVR audios of you PBX or other PBX that are stored in a database.
+
+![Audio FingerPrinting](http://www.maf.mx/astricon/2017/images/spectrogram_peaks.png)
+
+The method to compare the recording and the IVR audios database is called Audio Fingerprinting (We use the Dejavu Audio Fingerprinting Python Library). The audios area compared and if the confidence (number of point matching between audio fingerprintings) is bigger you have a perfect match between audios.
+
+More info about this project and how to deal with TelCo at http://www.maf.mx/astricon/2017/ also you can watch the next video (https://www.youtube.com/watch?v=M9Nkh4mp2fI&t=1052s) where Chris from Crosstalk solutions talks about the Aloha project (minute 7:00).
+
 Prerequisites
 -----------
 - CentOS 6.7-x86_64-minimal ISO (Oreka)
@@ -118,7 +133,11 @@ iptables -F
 chkconfig orkaudio on
 service orkaudio start
 ```
-18. Go to OrkWeb at http://SERVERIP:8080/orkweb/ and test calls are being recorded.
+18. Login to MySQL and add a field to the oreka.orktape table.
+```
+alter table oreka.orktape `aloha_processed` binary(1) DEFAULT '0';
+```
+19. Go to OrkWeb at http://SERVERIP:8080/orkweb/ and test calls are being recorded.
 ### Aloha Server
 1. Install CentOS 7 Minimal on a physical server or virtual server.
 2. Disable SELinux (SELINUX=disabled)
@@ -145,7 +164,7 @@ mysql_secure_installation
 ```
 yum install epel-release -y
 yum groupinstall -y "development tools"
-yum install gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel portaudio-devel zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel expat-devel numpy scipy python-matplotlib ffmpeg portaudio-devel python-pip wget -y
+yum install gcc gcc-c++ kernel-devel python-devel libxslt-devel libffi-devel openssl-devel portaudio-devel zlib-devel bzip2-devel ncurses-devel sqlite-devel readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel expat-devel numpy scipy python-matplotlib ffmpeg portaudio-devel python-pip wget MySQL-python tkinter  -y
 pip install --upgrade pip
 pip install PyAudio
 pip install pydub
@@ -272,7 +291,7 @@ qualify=yes
 ```
 4. Clone the repository to your custom PBX and copy the aloha scripts
 ```
-yum install -y git
+yum install -y git MySQL-python
 cd /opt
 git clone https://github.com/mafairnet/aloha.git
 cd /opt/aloha/pbx_scripts/
